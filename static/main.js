@@ -41,7 +41,7 @@ function dataLoaded() {
         geodesic: true,
         strokeColor: '#FF7777',
         strokeOpacity: 1.0,
-        strokeWeight: 4
+        strokeWeight: 3
     });
     h_path.setMap(map);
 
@@ -50,6 +50,7 @@ function dataLoaded() {
 
 function fillPanel(content, id) {
     var days = data['days'];
+    for (var i in days) {
         var day = days[i];
 
         var table = document.getElementById('days-table');
