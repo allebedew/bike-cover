@@ -1,44 +1,72 @@
 var map;
-var path;
-var highlighted_path;
+var data;
+var h_path;
+
+window.onload = function() {
+    loadData();
+};
 
 function loadData() {
-    // remove current path
-    if (path != null) {
-        path.setMap(null);
-    }
-
-    // loading data
     var req = new XMLHttpRequest();
-    req.onload = function () {
-        dataLoaded();
+    req.onloadstart = function () {
+        console.log('start load');
     }
-    req.onprogress = function () {
-        console.log('progress...');
-    }
+    req.onload = dataLoaded;
     req.onerror = function () {
         console.log('data load error!');
     }
     req.open('GET', 'data', true);
-    req.send()
+    req.send();
 }
 
 function dataLoaded() {
-    var data = JSON.parse(this.responseText);
+    data = JSON.parse(this.responseText);
     console.log('data loaded');
-    points = data['all_points']
-    path = new google.maps.Polyline({
+    console.log(data);
+    
+    var points = data['all_points'];
+    var all_path = new google.maps.Polyline({
         path: points,
         geodesic: true,
-        strokeColor: '#FF7777',
+        strokeColor: '#7777FF',
         strokeOpacity: 1.0,
         strokeWeight: 2
     });
-    path.setMap(map);
+    all_path.setMap(map);
+
+    var h_points = data['days'][0]['points'];
+    console.log(h_points);
+    h_path = new google.maps.Polyline({
+        path: h_points,
+        geodesic: true,
+        strokeColor: '#FF7777',
+        strokeOpacity: 1.0,
+        strokeWeight: 4
+    });
+    h_path.setMap(map);
+
+    fillPanel();
 }
 
-function highlightPath() {
+function fillPanel(content, id) {
+    var days = data['days'];
+        var day = days[i];
 
+        var table = document.getElementById('days-table');
+        var tr = document.createElement("tr");
+        var td = document.createElement("td");
+        td.innerHTML = day['date'];
+        var td2 = document.createElement("td");
+        td2.innerHTML = day['points'].length;
+        tr.appendChild(td);
+        tr.appendChild(td2);
+        table.appendChild(tr);
+    }
+}
+
+function dayClicked() {
+    console.log('dayclick');
+    console.log(this);
 }
 
 function initMap() {
