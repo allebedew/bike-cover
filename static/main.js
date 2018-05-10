@@ -29,7 +29,7 @@ function dataLoaded() {
         path: points,
         geodesic: true,
         strokeColor: '#7777FF',
-        strokeOpacity: 1.0,
+        strokeOpacity: 0.75,
         strokeWeight: 2
     });
     all_path.setMap(map);
@@ -40,7 +40,7 @@ function dataLoaded() {
         path: h_points,
         geodesic: true,
         strokeColor: '#FF7777',
-        strokeOpacity: 1.0,
+        strokeOpacity: 0.75,
         strokeWeight: 3
     });
     h_path.setMap(map);
@@ -57,6 +57,7 @@ function fillPanel(content, id) {
         var tr = document.createElement("tr");
         var td = document.createElement("td");
         td.innerHTML = day['date'];
+        td.data = "testdata";
         var td2 = document.createElement("td");
         td2.innerHTML = day['points'].length;
         tr.appendChild(td);
@@ -68,6 +69,10 @@ function fillPanel(content, id) {
 function dayClicked() {
     console.log('dayclick');
     console.log(this);
+}
+
+function tableClick(e) {
+    console.log(e);
 }
 
 function initMap() {
