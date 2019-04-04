@@ -82,7 +82,7 @@ def prepare_db():
     )''')
     db.execute('''CREATE TABLE IF NOT EXISTS "tracks" (
         "id" INTEGER PRIMARY KEY,
-        "date_id" timestamp NOT NULL,
+        "day_id" INTEGER NOT NULL,
         "dist" INTEGER NOT NULL DEFAULT 0
     )''')
     db.execute('''CREATE TABLE IF NOT EXISTS "points" (
@@ -124,7 +124,7 @@ def insert_nodes(date, json):
     c.execute('INSERT INTO days(date, dist) VALUES (?,?)', (date, distance))
     day_id = c.lastrowid
     for track in tracks:
-        c.execute('INSERT INTO tracks(date_id, dist) VALUES (?,?)', (day_id, track['mileage']))
+        c.execute('INSERT INTO tracks(day_id, dist) VALUES (?,?)', (day_id, track['mileage']))
         track_id = c.lastrowid
         for node in track['nodes']:
             c.execute('INSERT INTO points(ts, day_id, track_id, lat, lon, speed, sat, dist) VALUES (?,?,?,?,?,?,?,?)',
@@ -156,7 +156,7 @@ if __name__ == "__main__":
 
     try:
         last_date = get_last_record()
-        date_from = last_date if last_date is not None else date(2016, 3, 1)
+        date_from = last_date if last_date is not None else date(2017, 3, 1)
         date_to = date.today()
         print('Starting fetch from {} to {}'.format(date_from, date_to))
 

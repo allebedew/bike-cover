@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <link rel="stylesheet" href="static/main.css">
+
+  <title>Bike Coverage</title>
+  
+</head>
+
+<body>
+
+  <div class="main-container">
+
+    <div class="panel">
+      <table class="table-sm" id="days-table" onclick="tableClick(event)">
+      </table>
+    </div>
+
+    <div class="map" id="map"></div>
+
+  </div>
+
+  <script src="static/main.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxDAeTopYBkWVPARr7IeM97SACyrC69_I&callback=initMap"></script>
+</body>
+</html>

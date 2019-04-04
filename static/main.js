@@ -1,8 +1,9 @@
 var map;
-var data;
+var days = [];
 var h_path;
 
 window.onload = function() {
+    initMap();
     loadData();
 };
 
@@ -15,64 +16,88 @@ function loadData() {
     req.onerror = function () {
         console.log('data load error!');
     }
-    req.open('GET', 'data', true);
+    req.open('GET', 'days', true);
     req.send();
 }
 
 function dataLoaded() {
-    data = JSON.parse(this.responseText);
+    days = JSON.parse(this.responseText)['days'];
     console.log('data loaded');
-    console.log(data);
-    
-    var points = data['all_points'];
-    var all_path = new google.maps.Polyline({
-        path: points,
-        geodesic: true,
-        strokeColor: '#7777FF',
-        strokeOpacity: 0.75,
-        strokeWeight: 2
-    });
-    all_path.setMap(map);
-
-    var h_points = data['days'][0]['points'];
-    console.log(h_points);
-    h_path = new google.maps.Polyline({
-        path: h_points,
-        geodesic: true,
-        strokeColor: '#FF7777',
-        strokeOpacity: 0.75,
-        strokeWeight: 3
-    });
-    h_path.setMap(map);
 
     fillPanel();
+    fillMap();
 }
 
-function fillPanel(content, id) {
-    var days = data['days'];
+function fillPanel() {
     for (var i in days) {
         var day = days[i];
 
+        var dist_factor = Math.min(day['dist'] / 300000, 1);
+        var dist_color = parseInt(16 - (16 * dist_factor)).toString(16)
+
         var table = document.getElementById('days-table');
         var tr = document.createElement("tr");
+    
         var td = document.createElement("td");
         td.innerHTML = day['date'];
         td.data = "testdata";
+        td.setAttribute('arr-index', i);
+
         var td2 = document.createElement("td");
-        td2.innerHTML = day['points'].length;
+        td2.innerHTML = day['dist'] / 1000 + ' km';
+        td2.setAttribute('arr-index', i);
+
         tr.appendChild(td);
         tr.appendChild(td2);
+        tr.style.color = '#'+dist_color+'f'+dist_color;
         table.appendChild(tr);
     }
 }
 
-function dayClicked() {
-    console.log('dayclick');
-    console.log(this);
+function fillMap() {
+    for (var i in days) {
+        var day = days[i];
+
+        var points = day['points'];
+        var path = new google.maps.Polyline({
+            path: points,
+            geodesic: true,
+            strokeColor: '#7777FF',
+            strokeOpacity: 0.3,
+            strokeWeight: 4
+        });
+        path.setMap(map);
+
+        
+    }
+}
+
+function highlightRoute(i) {
+    if (h_path) {
+        h_path.setMap(null);
+    }
+
+    var h_points = days[i]['points']
+    h_path = new google.maps.Polyline({
+        path: h_points,
+        geodesic: true,
+        strokeColor: '#f00',
+        strokeOpacity: 1,
+        strokeWeight: 4,
+        fillColor: '#f00',
+        fillOpacity: 1,
+        zIndex: 1000
+    });
+    console.log(h_path.zIndex)
+    h_path.setMap(map);
+    console.log(h_path.zIndex)
 }
 
 function tableClick(e) {
-    console.log(e);
+    var i = e.target.getAttribute('arr-index');
+    if (i) {
+        highlightRoute(i);
+    }
 }
 
 function initMap() {

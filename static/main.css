@@ -11,14 +11,32 @@ body {
     display: flex;
 }
 
+td {
+    height: 30px;
+    padding: 20px;
+    font-size: 14px;
+    font-family: sans-serif;
+    /* color: #bbb; */
+    border-bottom: 1px solid #777;
+}
+
+tr {
+    text-align: left;
+    
+}
+
+tr:hover {
+    background-color: #222;
+}
+
 .panel {
-    background-color: lightcyan;
+    background-color: #333333;
     overflow-y: scroll;
     /* display: inline-block; */
     width: 250px;
     height: 100%;
-    font-size: 12px;
-    padding: 10px;
+    /* font-size: 12px; */
+    /* padding: 15px; */
 }
 
 .map {
