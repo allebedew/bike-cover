@@ -3,7 +3,16 @@ import sqlite3, json
 from datetime import datetime
 
 def check(user, pw):
-    return (user == 'alex' and pw == 'iwbis') or (user == 'max' and pw == 'omlet')
+    with open('conf.json') as creds_file:
+        conf = json.load(creds_file)
+    users = conf['users']
+    print('Trying to log in as {}:{} ... '.format(user, pw), end='')
+    success = user in users and pw == users[user]
+    if success:
+        print('OK')
+    else:
+        print('FAILED!')
+    return success
 
 @route('/static/<filename>')
 def server_static(filename):
@@ -42,4 +51,4 @@ def days():
 def points():
     return {'points': 123}
 
-run(host='localhost', port=3000, debug=True)
+run(host='localhost', port=8000, debug=True)

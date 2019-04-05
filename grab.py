@@ -26,7 +26,7 @@ def login():
     payload = {'LoginForm[login]': conf['login'], 'LoginForm[pass]': conf['pass']}
     r = session.post(url + '/user/login', data=payload, headers=headers, allow_redirects=False)
     if r.status_code != 200:
-        print('Error response: {}\n{}'.format(r.status_code, r.text))
+        print('Error response: {}'.format(r.status_code))
         return False
     print('Logged in!')
     return True
@@ -63,7 +63,7 @@ def fetch_nodes(begin, end):
     req = session.get(url + '/device/' + conf['device'] + '/route', params=params, headers=headers, allow_redirects=False)
 
     if req.status_code != 200:
-        print('Error response: {}\n{}'.format(req.status_code, req.text))
+        print('Error response: {}'.format(req.status_code))
         return None
 
     json = req.json()
