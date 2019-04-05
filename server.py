@@ -1,17 +1,17 @@
-from bottle import route, run, template, static_file, auth_basic
+from bottle import route, run, template, static_file, auth_basic, install, request, response
 import sqlite3, json
 from datetime import datetime
+import logging
 
 def check(user, pw):
     with open('conf.json') as creds_file:
         conf = json.load(creds_file)
     users = conf['users']
-    print('Trying to log in as {}:{} ... '.format(user, pw), end='', flush=True)
     success = user in users and pw == users[user]
     if success:
-        print('OK', flush=True)
+        logging.info('Logged in as {}'.format(user))
     else:
-        print('FAILED!', flush=True)
+        logging.error('Error logging in as {} {}'.format(user, pw))
     return success
 
 @route('/static/<filename>')
@@ -47,9 +47,16 @@ def days():
     db.close()
     return {'days':days}
 
-@route('/points')
-def points():
-    return {'points': 123}
+logging.basicConfig(filename="access.log", level=logging.INFO, format='%(asctime)s %(message)s')
+logging.info('Bike Cover started!')
 
-run(host='0.0.0.0', port=8000, debug=False)
-print('Bike-Cover started!', flush=True)
+def logger(func):
+    def wrapper(*args, **kwargs):
+        req = func(*args, **kwargs)
+        logging.info('%s %s %s' % (request.remote_addr, request.method, request.path))
+        return req
+    return wrapper
+
+install(logger)
+
+run(host='0.0.0.0', port=8000, debug=False, quiet=True)
