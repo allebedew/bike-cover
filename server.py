@@ -6,12 +6,12 @@ def check(user, pw):
     with open('conf.json') as creds_file:
         conf = json.load(creds_file)
     users = conf['users']
-    print('Trying to log in as {}:{} ... '.format(user, pw), end='')
+    print('Trying to log in as {}:{} ... '.format(user, pw), end='', flush=True)
     success = user in users and pw == users[user]
     if success:
-        print('OK')
+        print('OK', flush=True)
     else:
-        print('FAILED!')
+        print('FAILED!', flush=True)
     return success
 
 @route('/static/<filename>')
@@ -52,3 +52,4 @@ def points():
     return {'points': 123}
 
 run(host='0.0.0.0', port=8000, debug=False)
+print('Bike-Cover started!', flush=True)
