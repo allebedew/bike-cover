@@ -51,4 +51,4 @@ def days():
 def points():
     return {'points': 123}
 
-run(host='localhost', port=8000, debug=True)
+run(host='0.0.0.0', port=8000, debug=False)
